@@ -1,64 +1,34 @@
-#include "measureCommunicate.h"
-#include <Wire.h> // Probably not necessary, but just for good measure. 
+#include <Wire.h>
 #include <LiquidCrystal.h>
 
-// Slave Addresses
-#define SLAVE_ADDRESS_A 8
-#define SLAVE_ADDRESS_B 7
-
-// Variables for liquid crystal display
 const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-unsigned int bytesRead;
-
-// Variables for volume
-double volumeA;
-double volumeB;
-char c;
-
 void setup() {
-  Serial.begin(9600);
-  Wire.begin();
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  // Wire.onReceive(receiveEvent)
-  // lcd.print("Hello world!");
+  Wire.begin();        // join i2c bus (address optional for master);
+  Serial.begin(9600);  // start serial for output
 }
 
 void loop() {
-  // lcd.print("Hello0");
-  Wire.requestFrom(SLAVE_ADDRESS_A, 8);
-  // lcd.print("world");
+  Wire.requestFrom(8, 6);    // request 6 bytes from slave device #8
   // lcd.setCursor(0, 0);
-  // while (Wire.available) {
-  // c = Wire.read();
-  // Serial.print(c);
-  // lcd.print(c);
-  bytesRead = I2C_readAnything(volumeA);
-  lcd.setCursor(0, 0);
-  lcd.print(volumeA);
-  // lcd.print("Working?");
-  Serial.print(bytesRead);
-  Serial.print(volumeA);
-  // }
-  // lcd.print("World");
 
-  delay(200);
+  while (Wire.available()) { // slave may send less than requested
+    char c = Wire.read(); // receive a byte as character
+    lcd.print(c);
+    Serial.print(c);         // print the character
+  }
 
-  Wire.requestFrom(SLAVE_ADDRESS_B, 8);
-  // while (Wire.available()) {
-  // c = Wire.read();
-  // Serial.print(c);
-  // lcd.print(c);
-  bytesRead = I2C_readAnything(volumeB);
-  lcd.setCursor(0, 12);
-  lcd.print(volumeB);
-  Serial.print(bytesRead);
-  Serial.print(volumeB);
-    
-  //}
+  // lcd.setCursor(0, 16);
 
-  delay(200);
- 
+  Wire.requestFrom(7, 6);
+   while (Wire.available()) { // slave may send less than requested
+    char c = Wire.read(); // receive a byte as character
+    lcd.print(c);
+    Serial.print(c);         // print the character
+  }
+
+  delay(500);
 }

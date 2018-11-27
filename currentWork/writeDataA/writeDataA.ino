@@ -1,12 +1,7 @@
-
 #include <Wire.h>
-#include "measureCommunicate.h"
-
-#define MY_ADDRESS 8
 
 void setup() {
-  Serial.begin(9600);
-  Wire.begin(MY_ADDRESS);                
+  Wire.begin(7);                
   Wire.onRequest(requestEvent); 
 }
 
@@ -15,16 +10,10 @@ void loop() {
 }
 
 void requestEvent() {
-   double valueToSend = measureSoundLevel();
-   // Serial.println(volts);
-   // bytesSent = I2C_writeAnything(volts);
-   //dtostrf(volts, 5, 3, str);
-   // Serial.print("From slave A");
-   // Serial.print(str);
-   // int i = 0;
-   // Wire.write("Glycine");
-   I2C_writeAnything(valueToSend);
-   // Serial.println("Glycine");
+   char arr[4];
    
-   // valueToBeSent = (int) (100.0 * volts);
+   double x = 5.00;
+   dtostrf(x, 4, 2, arr);
+   //arr[4] = '/0';
+   Wire.write(arr);
 }

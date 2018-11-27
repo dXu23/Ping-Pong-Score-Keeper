@@ -16,7 +16,7 @@ template <typename T> unsigned int I2C_readAnything(T& value) {
 } 
 
 // Function to measure sound levels
-unsigned int measureSoundLevel() {
+unsigned char measureSoundLevel() {
    unsigned long startMillis= millis();  // Start of sample window
    unsigned int peakToPeak = 0;   // peak-to-peak level
  
@@ -42,6 +42,6 @@ unsigned int measureSoundLevel() {
       }
    }
    peakToPeak = signalMax - signalMin;
-   return peakToPeak * 5.0 / 1024;
+   return peakToPeak * 5 / 8;
    
 }
