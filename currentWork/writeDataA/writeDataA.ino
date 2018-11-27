@@ -1,9 +1,12 @@
 
 #include <Wire.h>
+#include "measureCommunicate.h"
 
+#define MY_ADDRESS 8
 
 void setup() {
-  Wire.begin(7);                
+  Serial.begin(9600);
+  Wire.begin(MY_ADDRESS);                
   Wire.onRequest(requestEvent); 
 }
 
@@ -17,20 +20,11 @@ void requestEvent() {
    // bytesSent = I2C_writeAnything(volts);
    //dtostrf(volts, 5, 3, str);
    // Serial.print("From slave A");
-   Serial.print(str);
-   int i = 0;
-   Wire.write("Glycine");
-   Serial.println("Glycine");
+   // Serial.print(str);
+   // int i = 0;
+   // Wire.write("Glycine");
+   I2C_writeAnything(valueToSend);
+   // Serial.println("Glycine");
    
    // valueToBeSent = (int) (100.0 * volts);
-}
-
-void setup() {
-    Serial.begin(9600);
-    Wire.begin(8);
-    Wire.onRequest(requestEvent);
-}
-
-void loop() {
-    delay(500);
 }
