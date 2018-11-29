@@ -1,7 +1,22 @@
+// Credit goes to Nick Gammon for writing these functions. 
+#include <Arduino.h>
 #include <Wire.h>
 
+template <typename T> unsigned int I2C_writeAnything (const T& value) {
+    Wire.write((byte *) &value, sizeof (value));
+    return sizeof (value);
+}  
+
+template <typename T> unsigned int I2C_readAnything(T& value) {
+    byte * p = (byte*) &value;
+    unsigned int i;
+    for (i = 0; i < sizeof value; i++)
+          *p++ = Wire.read();
+    return i;
+} 
+
+// Function to measure sound levels
 double measureSoundLevel() {
-   /*
    unsigned long startMillis= millis();  // Start of sample window
    unsigned int peakToPeak = 0;   // peak-to-peak level
  
@@ -26,40 +41,7 @@ double measureSoundLevel() {
          }
       }
    }
-   */
-   /*long sum = 0;
-   int i;
-   for (i = 0; i < 100; i++)
-       sum += analogRead(0);
-   return sum / 100;
-   /*
-   Serial.print("peakToPeak");
-   Serial.println(x * 5.0 / 1024);
-   return x * 5.0 / 1024;
-   */
-   double x = analogRead(0);
-   return x/100;
+   peakToPeak = signalMax - signalMin;
+   return peakToPeak * 5.0 / 1024;
    
-}
-
-void setup() {
-  Serial.begin(9600);
-  Wire.begin(8);                
-  Wire.onRequest(requestEvent); 
-}
-
-void loop() {
-  delay(100);
-}
-
-void requestEvent() {
-   char arr[10];
-
-   // Serial.print("Hello");
-   double x = measureSoundLevel();
-   // Serial.print("World!");
-   Serial.print(x);
-   dtostrf(x, 4, 2, arr);
-   //arr[4] = '/0';
-   Wire.write(arr);
 }
